@@ -1,3 +1,4 @@
+/* providers/post_provider.dart */
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -6,21 +7,19 @@ import '../models/post.dart';
 
 class PostProvider with ChangeNotifier {
   List<Post> _posts = [];
-
   List<Post> get posts => _posts;
-
   Future<void> fetchPosts(String token) async {
     final response = await http.get(
       Uri.parse('${Constants.apiBaseUrl}/posts'),
       headers: {'Authorization': 'Bearer $token'},
     );
-
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as List;
       _posts = data.map((json) => Post.fromJson(json)).toList();
       notifyListeners();
     } else {
-      throw Exception('Failed to load posts');
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['message'] ?? 'Failed to load posts');
     }
   }
 
@@ -34,13 +33,13 @@ class PostProvider with ChangeNotifier {
       },
       body: jsonEncode({'content': content, 'image_url': imageUrl}),
     );
-
     if (response.statusCode == 201) {
       final newPost = Post.fromJson(jsonDecode(response.body));
       _posts.insert(0, newPost);
       notifyListeners();
     } else {
-      throw Exception('Failed to create post');
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['message'] ?? 'Failed to create post');
     }
   }
 
@@ -53,11 +52,11 @@ class PostProvider with ChangeNotifier {
       },
       body: jsonEncode({'content': content}),
     );
-
     if (response.statusCode == 201) {
-      await fetchPosts(token); // Refresh posts to include new comment
+      await fetchPosts(token);
     } else {
-      throw Exception('Failed to add comment');
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['message'] ?? 'Failed to add comment');
     }
   }
 
@@ -66,11 +65,11 @@ class PostProvider with ChangeNotifier {
       Uri.parse('${Constants.apiBaseUrl}/posts/$postId/likes'),
       headers: {'Authorization': 'Bearer $token'},
     );
-
     if (response.statusCode == 201) {
-      await fetchPosts(token); // Refresh posts to update likes
+      await fetchPosts(token);
     } else {
-      throw Exception('Failed to like post');
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['message'] ?? 'Failed to like post');
     }
   }
 }
