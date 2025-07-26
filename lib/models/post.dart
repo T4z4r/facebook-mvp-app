@@ -1,3 +1,5 @@
+import '/models/comment.dart';
+
 import '/models/user.dart';
 
 class Post {
