@@ -5,8 +5,8 @@ import 'providers/post_provider.dart';
 import 'providers/friend_provider.dart';
 import 'providers/message_provider.dart';
 import 'providers/group_provider.dart';
-import '/screens/login_screen.dart';
-import '/screens/home_screen.dart';
+import 'screens.dart/home_screen.dart';
+import 'screens.dart/login_screen.dart';
 
 void main() {
   runApp(

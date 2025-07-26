@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +12,8 @@ class AuthProvider with ChangeNotifier {
   User? get user => _user;
   String? get token => _token;
 
-  Future<void> register(String name, String email, String password, String passwordConfirmation) async {
+  Future<void> register(String name, String email, String password,
+      String passwordConfirmation) async {
     final response = await http.post(
       Uri.parse('${Constants.apiBaseUrl}/register'),
       headers: {'Content-Type': 'application/json'},
@@ -52,6 +52,7 @@ class AuthProvider with ChangeNotifier {
       await prefs.setString('token', _token!);
       notifyListeners();
     } else {
+      print(response.body);
       throw Exception('Login failed');
     }
   }
