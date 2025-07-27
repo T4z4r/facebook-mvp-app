@@ -1,7 +1,3 @@
-// class Constants {
-//   static const String apiBaseUrl = 'http://192.168.1.107:8000/api';
-// }
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Constants {
